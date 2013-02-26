@@ -43,8 +43,8 @@
         data-clientId="{{ CLIENT_ID }}"
         data-accesstype="offline"
         data-callback="onSignInCallback"
+        data-theme="dark"
         data-cookiepolicy="single_host_origin">
-        Sign In
     </button>
   </div>
   <div id="authOps" style="display:none">
@@ -71,7 +71,6 @@
 </body>
 <script type="text/javascript">
 var helper = (function() {
-  var BASE_API_PATH = 'plus/v1/';
   var authResult = undefined;
 
   return {
