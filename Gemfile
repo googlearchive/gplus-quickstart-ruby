@@ -1,4 +1,4 @@
-source :gemcutter
+source "https://rubygems.org"
 
 gem 'sinatra', :require => 'sinatra/base'
 gem 'google-api-client', '>= 0.6.2', :require => 'google/api_client'
