@@ -153,7 +153,6 @@ get '/' do
   response = File.read('index.html')
       .sub(/[{]{2}\s*STATE\s*[}]{2}/, state)
       .sub(/[{]{2}\s*CLIENT_ID\s*[}]{2}/, $credentials.client_id)
-      .sub(/[{]{2}\s*CLIENT_SECRET\s*[}]{2}/, $credentials.client_secret)
       .sub(/[{]{2}\s*APPLICATION_NAME\s*[}]{2}/, APPLICATION_NAME)
 end
 
