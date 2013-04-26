@@ -69,21 +69,6 @@ post '/connect' do
       $authorization.fetch_access_token!
       $client.authorization = $authorization
 
-      # Verify the issued token matches the user and client.
-      oauth2 = $client.discovered_api('oauth2','v2')
-      tokeninfo = JSON.parse($client.execute(oauth2.tokeninfo,
-          :access_token => $client.authorization.access_token,
-          :id_token => $client.authorization.id_token).response.body)
-      if tokeninfo['error']
-        halt 401, tokeninfo['error']
-      end
-      if tokeninfo['issued_to'] != $credentials.client_id
-        halt 401, 'Token\'s client ID does not match app\'s.'
-      end
-      if tokeninfo['user_id'] != params[:gplus_id]
-        halt 401, 'Token\'s user ID doesn\'t match given user ID.'
-      end
-
       # Serialize and store the token in the user's session.
       token_pair = TokenPair.new
       token_pair.update_token!($client.authorization)
