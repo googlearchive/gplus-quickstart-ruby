@@ -25,6 +25,7 @@
 #  * Disconnecting the app from the user's Google account and revoking tokens.
 #
 # Author: class@google.com (Gus Class)
+require 'base64'
 require 'rubygems'
 require 'json'
 require 'sinatra'
@@ -68,6 +69,17 @@ post '/connect' do
       $authorization.code = request.body.read
       $authorization.fetch_access_token!
       $client.authorization = $authorization
+
+      id_token = $client.authorization.id_token
+      encoded_json_body = id_token.split('.')[1]
+      # Base64 must be a multiple of 4 characters long, trailing with '='
+      encoded_json_body += (['='] * (encoded_json_body.length % 4)).join('')
+      json_body = Base64.decode64(encoded_json_body)
+      body = JSON.parse(json_body)
+      # You can read the Google user ID in the ID token.
+      # "sub" represents the ID token subscriber which in our case
+      # is the user ID. This sample does not use the user ID.
+      gplus_id = body['sub']
 
       # Serialize and store the token in the user's session.
       token_pair = TokenPair.new
