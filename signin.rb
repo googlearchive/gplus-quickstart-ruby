@@ -88,8 +88,11 @@ post '/connect' do
     else
       halt 401, 'The client state does not match the server state.'
     end
+    status 200
+  else
+    content_type :json
+    'Current user is already connected.'.to_json
   end
-  status 200
 end
 
 
@@ -149,7 +152,7 @@ get '/' do
 
   response = File.read('index.html').sub(/[{]{2}\s*STATE\s*[}]{2}/, state)
   response = response.sub(/[{]{2}\s*CLIENT_ID\s*[}]{2}/, $credentials.client_id)
-  response = response.sub(/[{]{2}\s*APPLICATION_NAME\s*[}]{2}/, 
+  response = response.sub(/[{]{2}\s*APPLICATION_NAME\s*[}]{2}/,
       APPLICATION_NAME)
 end
 
