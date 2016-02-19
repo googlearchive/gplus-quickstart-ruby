@@ -21,7 +21,7 @@
 #  * Using the Google+ Sign-In button to get an OAuth 2.0 refresh token.
 #  * Exchanging the refresh token for an access token.
 #  * Making Google+ API requests with the access token, including getting a
-#    list of people that the user has circled.
+#    list of public activities for the authorized user.
 #  * Disconnecting the app from the user's Google account and revoking tokens.
 #
 # Author: class@google.com (Gus Class)
@@ -95,10 +95,15 @@ post '/connect' do
   end
 end
 
+get '/session' do
+  $client.authorization.update_token!(session[:token].to_hash)
+  content_type :json
+  session[:token].to_hash[:access_token]
+end
 
 ##
-# An Example API call, list the people the user shared with this app.
-get '/people' do
+# An Example API call, list the activities the user has made public.
+get '/activities' do
   # Check for stored credentials in the current user's session.
   if !session[:token]
     halt 401, 'User not connected.'
@@ -108,9 +113,9 @@ get '/people' do
   $client.authorization.update_token!(session[:token].to_hash)
   plus = $client.discovered_api('plus', 'v1')
 
-  # Get the list of people as JSON and return it.
-  response = $client.execute!(plus.people.list,
-      :collection => 'visible',
+  # Get the public list of activities as JSON and return it.
+  response = $client.execute!(plus.activities.list,
+      :collection => 'public',
       :userId => 'me').body
   content_type :json
   response
